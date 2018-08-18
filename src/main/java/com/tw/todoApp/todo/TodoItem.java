@@ -5,7 +5,6 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -18,11 +17,11 @@ public class TodoItem {
     private String description;
 
     @NotNull(message = "Reminder can not be null.")
-    private LocalDate reminder;
+    private String reminder;
 
     public TodoItem(){}
 
-    public TodoItem(String todoTitle, String description, LocalDate reminder) {
+    public TodoItem(String todoTitle, String description, String reminder) {
         this.todoTitle = todoTitle;
         this.description = description;
         this.reminder = reminder;
@@ -44,11 +43,11 @@ public class TodoItem {
         this.description = description;
     }
 
-    public LocalDate getReminder() {
+    public String getReminder() {
         return reminder;
     }
 
-    public void setReminder(LocalDate reminder) {
+    public void setReminder(String reminder) {
         this.reminder = reminder;
     }
 
@@ -70,7 +69,7 @@ public class TodoItem {
 
     @Override
     public String toString() {
-        return "TodoItem{" +
+        return "{" +
                 "todoTitle='" + todoTitle + '\'' +
                 ", description='" + description + '\'' +
                 ", reminder='" + reminder + '\'' +

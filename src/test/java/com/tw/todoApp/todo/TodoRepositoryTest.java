@@ -10,12 +10,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
@@ -32,24 +26,10 @@ public class TodoRepositoryTest {
     @Autowired
     TodoRepository todoRepository;
 
-    @Test
-    public void shouldGiveEmptyListWhenNoTodoItemsAdded() {
-        assertEquals(todoRepository.getAllTodoItems(),Collections.emptyList());
-    }
-
-    @Test
-    public void shouldGiveAllTodoListWhenTodoItemsAlreadyAdded() throws TitleCanNotBeDuplicateException {
-        TodoItem firstTodoItem = new TodoItem("Python", "read about python", LocalDate.now());
-        TodoItem secondTodoItem = new TodoItem("Cricket", "practice of cricket", LocalDate.now());
-        todoRepository.addTodoItem(firstTodoItem);
-        todoRepository.addTodoItem(secondTodoItem);
-        assertEquals(todoRepository.getAllTodoItems(),Arrays.asList(firstTodoItem,secondTodoItem));
-
-    }
 
     @Test
     public void shouldAddTodoInRepository() throws TitleCanNotBeDuplicateException {
-        TodoItem todoItem = new TodoItem("Modal", "read about angular modal", LocalDate.now());
+        TodoItem todoItem = new TodoItem("Modal", "read about angular modal", "2018-11-12");
         todoRepository.addTodoItem(todoItem);
         assertTrue(todoRepository.isExitByTodoTitle("Modal"));
     }
@@ -58,9 +38,10 @@ public class TodoRepositoryTest {
     public void shouldThrowExceptionForAlreadyExistedTodoBySameTitle() throws TitleCanNotBeDuplicateException {
         this.thrown.expect(TitleCanNotBeDuplicateException.class);
         this.thrown.expectMessage("Title can not duplicate .This title already added");
-        TodoItem firstTodoItem = new TodoItem("hello", "How r u", LocalDate.now());
-        TodoItem secondTodoItem = new TodoItem("hello", "How r u", LocalDate.now());
+        TodoItem firstTodoItem = new TodoItem("hello", "How r u", "2018-11-12");
+        TodoItem secondTodoItem = new TodoItem("hello", "How r u", "2018-11-12");
         todoRepository.addTodoItem(firstTodoItem);
         todoRepository.addTodoItem(secondTodoItem);
     }
+
 }

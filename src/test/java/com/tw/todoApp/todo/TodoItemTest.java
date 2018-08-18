@@ -13,8 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.persistence.PersistenceException;
 import javax.validation.ConstraintViolationException;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -33,8 +32,7 @@ public class TodoItemTest {
 
     @Test
     public void shouldAddTodoWithNotNullTodoTitleAndReminder() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-        LocalDate date = LocalDate.parse("8/11/2017", formatter);
+        String date = "08/11/2017";
         TodoItem todo = new TodoItem("Read Angular", "Get Basic knowledge of angular",date);
         TodoItem addedTodo = this.entityManager.persistAndFlush(todo);
         assertThat(addedTodo.getTodoTitle(), is("Read Angular"));
@@ -45,7 +43,7 @@ public class TodoItemTest {
     @Test
     public void shouldThrowExceptionForInsertingNullTitle() {
         this.thrown.expect(PersistenceException.class);
-        TodoItem todo = new TodoItem(null,"nothing", LocalDate.parse("2018-12-22"));
+        TodoItem todo = new TodoItem(null,"nothing","2018-12-22");
         TodoItem addedTodoItem = this.entityManager.persistAndFlush(todo);
     }
 

@@ -10,6 +10,12 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.Collections;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
@@ -44,4 +50,20 @@ public class TodoRepositoryTest {
         todoRepository.addTodoItem(secondTodoItem);
     }
 
+    @Test
+    public void shouldDeleteTodoByTitle() throws TitleCanNotBeDuplicateException, TitleNotFoundException {
+        TodoItem todoItem = new TodoItem("Cricket", "play cricket", "2018-11-09");
+        todoRepository.addTodoItem(todoItem);
+        assertTrue(todoRepository.isExitByTodoTitle("Cricket"));
+        todoRepository.deleteTodoByTitle("Cricket");
+        assertFalse(todoRepository.isExitByTodoTitle("Cricket"));
+
+    }
+
+    @Test
+    public void shouldThrowExceptionForTitleNotFoundForDelete() throws TitleNotFoundException {
+        this.thrown.expect(TitleNotFoundException.class);
+        this.thrown.expectMessage("Title not found in Todo List");
+        todoRepository.deleteTodoByTitle("abc");
+    }
 }

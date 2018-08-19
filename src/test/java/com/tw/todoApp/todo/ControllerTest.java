@@ -18,6 +18,7 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -56,24 +57,29 @@ public class ControllerTest {
         verify(todoRepository, times(1)).getAllTodoItems();
     }
 
-
     @Test
     public void shouldAddTodoWithPostRequest() throws  Exception {
-        Integer abc = 5;
-        System.out.println(++abc);
-        System.out.println(abc++);
         mockMvc.perform(post("/addTodo").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content("{\"todoTitle\": \"Hello\", \"description\":\"Nothing yaar\",\"reminder\": \"2009\"}"))
                 .andExpect(status().isOk());
 
     }
 
-
     @Test
     public void shouldSendBadStatusForBadRequest() throws  Exception {
         mockMvc.perform(post("/addTodo").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(""))
                 .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    public void shouldSendOkRequestForDeleteTodoWhenTitleIsAvailable() throws Exception, TitleNotFoundException {
+        mockMvc.perform(delete("/delete/cricket")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk());
+        verify(todoRepository, times(1)).deleteTodoByTitle("cricket");
 
     }
 }

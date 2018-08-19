@@ -27,4 +27,11 @@ public class TodoRepository {
     public List<TodoItem> getAllTodoItems() {
         return repository.findAll();
     }
+
+    public void deleteTodoByTitle(String title) throws TitleNotFoundException {
+        if (!isExitByTodoTitle(title)){
+            throw new TitleNotFoundException();
+        }
+        repository.deleteById(title);
+    }
 }

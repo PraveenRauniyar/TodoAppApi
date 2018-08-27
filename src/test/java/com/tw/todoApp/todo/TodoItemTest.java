@@ -42,7 +42,7 @@ public class TodoItemTest {
 
     @Test
     public void shouldThrowExceptionForInsertingNullTitle() {
-        this.thrown.expect(PersistenceException.class);
+        this.thrown.expect(ConstraintViolationException.class);
         TodoItem todo = new TodoItem(null,"nothing","2018-12-22");
         TodoItem addedTodoItem = this.entityManager.persistAndFlush(todo);
     }

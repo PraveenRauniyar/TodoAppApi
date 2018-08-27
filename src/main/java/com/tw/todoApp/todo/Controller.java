@@ -17,8 +17,8 @@ public class Controller {
 
     @CrossOrigin(origins = "http://localhost:4200")
     @RequestMapping(method = RequestMethod.POST, value = "/addTodo")
-    public void addTodo(@RequestBody TodoItem todoItem) throws TitleCanNotBeDuplicateException {
-        todoRepository.addTodoItem(todoItem);
+    public long addTodo(@RequestBody TodoItem todoItem)  {
+        return todoRepository.addTodoItem(todoItem);
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
@@ -28,9 +28,9 @@ public class Controller {
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
-    @RequestMapping(method = RequestMethod.DELETE, value = "/delete/{title}")
-    public void deleteTodo(@PathVariable String title) throws TitleNotFoundException {
-        todoRepository.deleteTodoByTitle(title);
+    @RequestMapping(method = RequestMethod.DELETE, value = "/delete/{id}")
+    public void deleteTodo(@PathVariable long id) throws TodoNotFoundByThisIdException {
+        todoRepository.deleteTodoByTodoId(id);
     }
 
 

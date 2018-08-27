@@ -12,26 +12,24 @@ public class TodoRepository {
     private Repository repository;
 
 
-    public void addTodoItem(TodoItem todoItem) throws TitleCanNotBeDuplicateException {
-        if (isExitByTodoTitle(todoItem.getTodoTitle())){
-            throw new TitleCanNotBeDuplicateException();
-        }
+    public long addTodoItem(TodoItem todoItem)  {
         repository.save(todoItem);
+        return todoItem.getTodoId();
     }
 
-
-    public Boolean isExitByTodoTitle(String title) {
-        return repository.existsById(title);
+    public Boolean isExitByTodoId(long id) {
+        return repository.existsById(id);
     }
 
     public List<TodoItem> getAllTodoItems() {
         return repository.findAll();
     }
 
-    public void deleteTodoByTitle(String title) throws TitleNotFoundException {
-        if (!isExitByTodoTitle(title)){
-            throw new TitleNotFoundException();
+    public void deleteTodoByTodoId(long id) throws  TodoNotFoundByThisIdException {
+        if (!isExitByTodoId(id)){
+            throw new TodoNotFoundByThisIdException();
         }
-        repository.deleteById(title);
+        repository.deleteById(id);
     }
+
 }

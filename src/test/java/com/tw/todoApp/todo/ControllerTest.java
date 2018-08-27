@@ -74,12 +74,13 @@ public class ControllerTest {
     }
 
     @Test
-    public void shouldSendOkRequestForDeleteTodoWhenTitleIsAvailable() throws Exception, TitleNotFoundException {
-        mockMvc.perform(delete("/delete/cricket")
+    public void shouldSendOkRequestForDeleteTodoWhenTitleIsAvailable() throws Exception, TodoNotFoundByThisIdException {
+        when(todoRepository.isExitByTodoId(1)).thenReturn(true);
+        mockMvc.perform(delete("/delete/1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk());
-        verify(todoRepository, times(1)).deleteTodoByTitle("cricket");
+        verify(todoRepository, times(1)).deleteTodoByTodoId(1);
 
     }
 }

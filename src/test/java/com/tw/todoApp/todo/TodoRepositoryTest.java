@@ -10,11 +10,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -34,36 +29,38 @@ public class TodoRepositoryTest {
 
 
     @Test
-    public void shouldAddTodoInRepository() throws TitleCanNotBeDuplicateException {
+    public void shouldAddTodoInRepository()  {
         TodoItem todoItem = new TodoItem("Modal", "read about angular modal", "2018-11-12");
-        todoRepository.addTodoItem(todoItem);
-        assertTrue(todoRepository.isExitByTodoTitle("Modal"));
+
+        long id = todoRepository.addTodoItem(todoItem);
+        assertTrue(todoRepository.isExitByTodoId(id));
     }
 
     @Test
-    public void shouldThrowExceptionForAlreadyExistedTodoBySameTitle() throws TitleCanNotBeDuplicateException {
-        this.thrown.expect(TitleCanNotBeDuplicateException.class);
-        this.thrown.expectMessage("Title can not duplicate .This title already added");
-        TodoItem firstTodoItem = new TodoItem("hello", "How r u", "2018-11-12");
-        TodoItem secondTodoItem = new TodoItem("hello", "How r u", "2018-11-12");
-        todoRepository.addTodoItem(firstTodoItem);
-        todoRepository.addTodoItem(secondTodoItem);
+    public void shouldReturnTrueForExistedId()  {
+        TodoItem todoItem = new TodoItem("Preety", "read about angular modal", "2018-11-12");
+        long id = todoRepository.addTodoItem(todoItem);
+        assertTrue(todoRepository.isExitByTodoId(id));
     }
 
     @Test
-    public void shouldDeleteTodoByTitle() throws TitleCanNotBeDuplicateException, TitleNotFoundException {
+    public void shouldReturnFalseForNonExistedId() {
+        assertFalse(todoRepository.isExitByTodoId(-3));
+    }
+
+    @Test
+    public void shouldDeleteTodoById() throws TodoNotFoundByThisIdException {
         TodoItem todoItem = new TodoItem("Cricket", "play cricket", "2018-11-09");
-        todoRepository.addTodoItem(todoItem);
-        assertTrue(todoRepository.isExitByTodoTitle("Cricket"));
-        todoRepository.deleteTodoByTitle("Cricket");
-        assertFalse(todoRepository.isExitByTodoTitle("Cricket"));
-
+        long id = todoRepository.addTodoItem(todoItem);
+        assertTrue(todoRepository.isExitByTodoId(id));
+        todoRepository.deleteTodoByTodoId(id);
+        assertFalse(todoRepository.isExitByTodoId(id));
     }
 
     @Test
-    public void shouldThrowExceptionForTitleNotFoundForDelete() throws TitleNotFoundException {
-        this.thrown.expect(TitleNotFoundException.class);
-        this.thrown.expectMessage("Title not found in Todo List");
-        todoRepository.deleteTodoByTitle("abc");
+    public void shouldThrowExceptionForIdNotFoundForDelete() throws TodoNotFoundByThisIdException {
+        this.thrown.expect(TodoNotFoundByThisIdException.class);
+        this.thrown.expectMessage( "Todo  not found  by this id in Todo List");
+        todoRepository.deleteTodoByTodoId(0);
     }
 }
